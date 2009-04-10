@@ -3,6 +3,7 @@ module TwitterAuth
     attr_protected :login, :remember_token, :remember_token_expires_at
     
     TWITTER_ATTRIBUTES = [
+      :id,
       :name,
       :location,
       :description,
@@ -24,10 +25,10 @@ module TwitterAuth
       :utc_offset
     ]
     
-    validates_presence_of :login
-    validates_format_of :login, :with => /\A[a-z0-9_]+\z/i
-    validates_length_of :login, :in => 1..15
-    validates_uniqueness_of :login, :case_sensitive => false
+    validates_presence_of :login, :on => :update
+    validates_format_of :login, :with => /\A[a-z0-9_]+\z/i, :allow_nil => true
+    validates_length_of :login, :in => 1..15, :allow_nil => true
+    validates_uniqueness_of :login, :case_sensitive => false, :allow_nil => true
     validates_uniqueness_of :remember_token, :allow_blank => true
     
     def self.table_name; 'users' end
@@ -89,5 +90,6 @@ module TwitterAuth
       self.remember_token = self.remember_token_expires_at = nil
       self.save
     end
+    
   end
 end
